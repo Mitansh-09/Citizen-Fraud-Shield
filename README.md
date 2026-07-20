@@ -8,8 +8,13 @@ India lost over **Rs 1,776 crore** to "digital arrest" scams in just the first n
 
 ## What this does
 
-- **File a Report** — paste any call transcript or message. An 8-signal rule-based detection engine (authority impersonation, "digital arrest" threats, manufactured urgency, isolation tactics, ID/KYC bait, financial requests, parcel-scam narrative, money-laundering accusation) scores it 0–100 and returns a stamped verdict: Scam Confirmed / Suspicious / Likely Safe, with itemised reasoning and next-step guidance.
-- **The Evidence Board** — a fraud network graph visualising how individually-reported scam incidents cluster into organised campaigns by shared script patterns, timing, and phone-number formatting — the "connecting the dots" layer that individual complaints never surface on their own.
+- **Check a Message** — paste any call transcript or message. An 8-signal rule-based detection engine (authority impersonation, "digital arrest" threats, manufactured urgency, isolation tactics, ID/KYC bait, financial requests, parcel-scam narrative, money-laundering accusation) scores it 0–100 and returns a verdict: Scam Confirmed / Suspicious / Likely Safe, with plain-English reasoning and next-step guidance.
+- **Evidence Board** — a fraud network graph visualising how individually-reported scam incidents cluster into organised campaigns by shared script patterns, timing, and phone-number formatting. The board is a static demo dataset for the prototype, not live report ingestion yet.
+- **Optional settings** — the page works fully offline by default. If you add a Gemini API key in the settings panel, the app can generate richer explanation text for the current session.
+
+## UI Notes
+
+The page uses a more restrained civic-product layout instead of a theatrical evidence-board style, so the interface feels closer to a real public-facing tool and less like a generated demo.
 
 ## Why rule-based, not just LLM-only
 
@@ -23,7 +28,7 @@ The classifier works fully offline with zero API dependency — critical for a r
 
 ## Running locally
 
-No installation needed. Open `index.html` directly in any browser.
+No installation needed. Open [index.html](index.html) directly in any browser.
 
 ## Deployment
 
