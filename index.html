@@ -5,94 +5,100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Citizen Fraud Shield — Case Intake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --board:#4a3728;
-    --board-dark:#3a2b1f;
-    --felt:#2f3b2a;
-    --paper:#efe6d2;
-    --paper-dark:#e3d7b8;
-    --ink:#22201b;
-    --ink-soft:#4a4438;
-    --brass:#c99a3d;
-    --brass-dark:#a67c2e;
-    --stamp-red:#b23a2e;
-    --stamp-green:#3f6b4a;
-    --stamp-amber:#b6852f;
-    --string:#8c2b22;
-    --shadow: 0 6px 18px rgba(0,0,0,0.45);
+    --bg:#eef1ed;
+    --bg-alt:#e2e8e1;
+    --surface:#fcfbf8;
+    --surface-2:#f3efe7;
+    --surface-3:#e8e2d7;
+    --ink:#1d2320;
+    --ink-soft:#5b6560;
+    --line:#d7d1c5;
+    --accent:#1f5d50;
+    --accent-2:#b0672f;
+    --danger:#a84537;
+    --success:#2f6a45;
+    --warning:#9a6a24;
+    --board:#cfd7cf;
+    --board-dark:#aab6ac;
+    --string:#8a5a3c;
+    --shadow: 0 18px 45px rgba(18, 24, 22, 0.12);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent 60%),
-      repeating-linear-gradient(115deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 6px),
-      var(--board);
+      radial-gradient(circle at top left, rgba(31, 93, 80, 0.14), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(176, 103, 47, 0.12), transparent 28%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
     color:var(--ink);
-    font-family:'Lora', serif;
+    font-family:'Manrope', sans-serif;
     min-height:100vh;
+    line-height:1.5;
   }
-  ::selection{ background:var(--brass); color:var(--ink);}
+  ::selection{ background:#d6c8b0; color:var(--ink);}
 
   /* ---------- HEADER ---------- */
   header{
-    padding:22px 28px 16px;
-    border-bottom:3px double rgba(239,230,210,0.35);
-    background:linear-gradient(180deg, rgba(0,0,0,0.15), transparent);
+    max-width:1180px;
+    margin:20px auto 0;
+    padding:28px 28px 18px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,255,255,0.72));
+    border:1px solid rgba(215, 209, 197, 0.8);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(10px);
   }
   .case-number{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'IBM Plex Mono', monospace;
     font-size:11px;
-    letter-spacing:0.12em;
-    color:var(--brass);
+    letter-spacing:0.16em;
+    color:var(--accent);
     text-transform:uppercase;
   }
   h1{
-    font-family:'Special Elite', monospace;
-    color:var(--paper);
-    font-size:26px;
-    margin:6px 0 4px;
-    letter-spacing:0.03em;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+    font-family:'Fraunces', serif;
+    color:var(--ink);
+    font-size:clamp(2rem, 3vw, 3rem);
+    margin:8px 0 8px;
+    letter-spacing:-0.02em;
+    font-weight:600;
   }
   .subhead{
-    color:rgba(239,230,210,0.65);
-    font-size:13.5px;
-    font-style:italic;
-    max-width:620px;
+    color:var(--ink-soft);
+    font-size:14px;
+    max-width:720px;
   }
 
   nav{
     display:flex;
-    gap:0;
-    margin-top:18px;
-    border-bottom:1px solid rgba(239,230,210,0.25);
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
   }
   nav button{
-    font-family:'Special Elite', monospace;
-    background:none;
-    border:none;
-    color:rgba(239,230,210,0.55);
-    padding:10px 18px;
-    font-size:14px;
+    font-family:'IBM Plex Mono', monospace;
+    background:rgba(255,255,255,0.64);
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:11px 16px;
+    font-size:12px;
     cursor:pointer;
-    letter-spacing:0.04em;
-    border-bottom:3px solid transparent;
-    transition:color .2s, border-color .2s;
-  }
-  nav button:focus {
-    outline: 2px solid var(--brass);
-    outline-offset: 2px;
+    letter-spacing:0.06em;
+    border-radius:999px;
+    transition:background .2s, color .2s, transform .2s, border-color .2s;
   }
   nav button.active{
-    color:var(--paper);
-    border-bottom-color:var(--brass);
+    color:var(--surface);
+    background:var(--accent);
+    border-color:var(--accent);
+    box-shadow:0 8px 20px rgba(31, 93, 80, 0.18);
   }
-  nav button:hover{ color:var(--paper); }
+  nav button:hover{ transform:translateY(-1px); }
 
-  main{ padding:26px 28px 60px; max-width:1180px; margin:0 auto; }
+  main{ padding:22px 0 60px; max-width:1180px; margin:0 auto; }
   .view{ display:none; animation:fadeIn .35s ease; }
   .view.active{ display:block; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
@@ -100,94 +106,92 @@
   /* ---------- ANALYZE VIEW ---------- */
   .intake-grid{
     display:grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap:26px;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:22px;
   }
   @media (max-width: 880px){ .intake-grid{ grid-template-columns:1fr; } }
 
   .form-card{
-    background:var(--paper);
-    border-radius:2px;
-    padding:22px 22px 20px;
+    background:var(--surface);
+    border:1px solid rgba(215, 209, 197, 0.9);
+    border-radius:22px;
+    padding:22px;
     box-shadow:var(--shadow);
     position:relative;
-    background-image:
-      linear-gradient(var(--paper-dark) 1px, transparent 1px);
-    background-size: 100% 28px;
-    background-position: 0 64px;
   }
   .form-card::before{
     content:"";
-    position:absolute; top:-10px; left:32px;
-    width:20px; height:20px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #e9c976, var(--brass-dark));
-    box-shadow:0 3px 6px rgba(0,0,0,0.45);
+    position:absolute; inset:0;
+    border-radius:inherit;
+    background:linear-gradient(180deg, rgba(255,255,255,0.4), transparent 25%);
+    pointer-events:none;
   }
   .field-label{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'IBM Plex Mono', monospace;
     font-size:10.5px;
     text-transform:uppercase;
-    letter-spacing:0.1em;
+    letter-spacing:0.12em;
     color:var(--ink-soft);
-    margin-bottom:6px;
+    margin-bottom:10px;
     display:block;
   }
   textarea{
     width:100%;
-    min-height:190px;
+    min-height:220px;
     resize:vertical;
-    background:transparent;
-    border:none;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:16px 16px 14px;
     outline:none;
-    font-family:'Lora', serif;
+    font-family:'Manrope', sans-serif;
     font-size:15px;
-    line-height:28px;
+    line-height:1.7;
     color:var(--ink);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.65);
   }
-  textarea:focus {
-    outline: 2px solid var(--brass);
-    outline-offset: -2px;
-  }
-  textarea::placeholder{ color:#8a8065; font-style:italic; }
+  textarea::placeholder{ color:#8b938d; }
 
   .form-footer{
     display:flex; align-items:center; justify-content:space-between;
-    margin-top:6px; padding-top:14px; border-top:1px dashed #b8ab84;
+    gap:12px;
+    margin-top:14px; padding-top:14px; border-top:1px solid rgba(215, 209, 197, 0.9);
   }
   .sample-links{ display:flex; gap:10px; flex-wrap:wrap; }
   .sample-link{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'IBM Plex Mono', monospace;
     font-size:11px;
     color:var(--ink-soft);
-    background:rgba(0,0,0,0.05);
-    border:1px solid #c7b98f;
-    padding:4px 8px;
-    border-radius:2px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    padding:8px 10px;
+    border-radius:999px;
     cursor:pointer;
   }
-  .sample-link:hover{ background:rgba(0,0,0,0.1); }
+  .sample-link:hover{ background:#fff; }
 
   .stamp-btn{
-    font-family:'Special Elite', monospace;
-    background:var(--stamp-red);
-    color:var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--accent);
+    color:#fff;
     border:none;
-    padding:12px 22px;
-    font-size:14.5px;
+    padding:13px 20px;
+    font-size:12px;
     letter-spacing:0.08em;
     text-transform:uppercase;
     cursor:pointer;
-    border-radius:2px;
-    box-shadow:0 4px 0 #7a241c, 0 6px 10px rgba(0,0,0,0.4);
-    transition:transform .08s;
+    border-radius:999px;
+    box-shadow:0 10px 24px rgba(31, 93, 80, 0.2);
+    transition:transform .08s, box-shadow .2s, opacity .2s;
   }
-  .stamp-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 #7a241c; }
+  .stamp-btn:active{ transform:translateY(1px); box-shadow:0 6px 16px rgba(31, 93, 80, 0.18); }
   .stamp-btn:disabled{ opacity:0.55; cursor:wait; }
 
   /* result card */
   .result-card{
-    background:var(--paper);
-    border-radius:2px;
+    background:var(--surface);
+    border:1px solid rgba(215, 209, 197, 0.9);
+    border-radius:22px;
     padding:22px;
     box-shadow:var(--shadow);
     min-height:340px;
@@ -196,49 +200,48 @@
     overflow:hidden;
   }
   .result-empty{
-    margin:auto; text-align:center; color:#8a8065; font-style:italic; font-size:14px;
+    margin:auto; text-align:center; color:var(--ink-soft); font-size:14px;
   }
   .verdict-stamp{
     align-self:flex-start;
-    font-family:'Special Elite', monospace;
-    font-size:26px;
-    letter-spacing:0.05em;
-    padding:8px 16px;
-    border:4px solid currentColor;
-    border-radius:6px;
-    transform:rotate(-4deg);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    padding:8px 14px;
+    border:1px solid currentColor;
+    border-radius:999px;
     text-transform:uppercase;
+    background:rgba(255,255,255,0.72);
     opacity:0;
     animation:stampIn .4s ease forwards;
     animation-delay:.15s;
   }
   @keyframes stampIn{
-    0%{ opacity:0; transform:rotate(-4deg) scale(2.4); }
-    70%{ opacity:1; }
-    100%{ opacity:0.92; transform:rotate(-4deg) scale(1); }
+    0%{ opacity:0; transform:translateY(6px) scale(0.96); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
   }
-  .verdict-scam{ color:var(--stamp-red); }
-  .verdict-suspicious{ color:var(--stamp-amber); }
-  .verdict-safe{ color:var(--stamp-green); }
+  .verdict-scam{ color:var(--danger); }
+  .verdict-suspicious{ color:var(--warning); }
+  .verdict-safe{ color:var(--success); }
 
   .conf-row{ margin-top:18px; }
-  .conf-label{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; display:flex; justify-content:space-between; }
-  .conf-track{ height:8px; background:#d8caa4; border-radius:4px; margin-top:6px; overflow:hidden; }
-  .conf-fill{ height:100%; width:0%; transition:width .6s cubic-bezier(0.23, 1, 0.320, 1); border-radius:4px; }
+  .conf-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; display:flex; justify-content:space-between; }
+  .conf-track{ height:10px; background:var(--surface-3); border-radius:999px; margin-top:8px; overflow:hidden; }
+  .conf-fill{ height:100%; width:0%; transition:width .6s ease; border-radius:999px; }
 
   .findings{ margin-top:20px; }
-  .findings-title{ font-family:'JetBrains Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); border-bottom:1px solid #c7b98f; padding-bottom:6px; margin-bottom:10px;}
+  .findings-title{ font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:8px; margin-bottom:12px;}
   .finding-item{
     display:flex; gap:10px; align-items:flex-start;
     font-size:13.5px; line-height:22px; margin-bottom:8px;
   }
   .finding-tag{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'IBM Plex Mono', monospace;
     font-size:10px; color:var(--paper); background:var(--ink-soft);
     padding:2px 6px; border-radius:2px; white-space:nowrap; margin-top:2px;
   }
   .advice-box{
-    margin-top:auto; padding-top:16px; border-top:1px dashed #b8ab84;
+    margin-top:auto; padding-top:16px; border-top:1px solid var(--line);
     font-size:13px; color:var(--ink-soft); line-height:20px;
   }
   .advice-box b{ color:var(--ink); }
@@ -246,19 +249,18 @@
   /* ---------- BOARD VIEW ---------- */
   .board-wrap{
     background:
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0 1px, transparent 1px 3px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 3px),
-      var(--board-dark);
-    border:10px solid var(--felt);
-    border-radius:4px;
-    box-shadow: inset 0 0 60px rgba(0,0,0,0.55), var(--shadow);
-    padding:10px;
+      radial-gradient(circle at top left, rgba(255,255,255,0.24), transparent 28%),
+      linear-gradient(180deg, #3f5348 0%, #304138 100%);
+    border:1px solid rgba(32, 43, 37, 0.45);
+    border-radius:22px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), var(--shadow);
+    padding:14px;
     position:relative;
   }
   .board-toolbar{
     display:flex; justify-content:space-between; align-items:center;
-    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--paper);
-    padding:6px 10px 14px; letter-spacing:.05em; text-transform:uppercase;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:rgba(255,255,255,0.88);
+    padding:6px 8px 14px; letter-spacing:.05em; text-transform:uppercase; gap:10px;
   }
   .legend{ display:flex; gap:14px; }
   .legend span{ display:flex; align-items:center; gap:5px; }
@@ -266,72 +268,71 @@
   svg#board{ width:100%; height:520px; display:block; }
 
   .card-node{ cursor:pointer; }
-  .card-node:focus { outline: 2px solid var(--brass); outline-offset: 2px; }
   .card-rect{
-    fill:var(--paper);
-    stroke:rgba(0,0,0,0.25);
+    fill:#f5f1e9;
+    stroke:rgba(29,35,32,0.18);
     stroke-width:1;
-    filter:drop-shadow(2px 4px 3px rgba(0,0,0,0.5));
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.22));
     transition:filter .15s;
   }
-  .card-node:hover .card-rect{ filter:drop-shadow(2px 6px 6px rgba(0,0,0,0.65)); }
-  .card-node:focus .card-rect{ filter:drop-shadow(2px 6px 6px rgba(0,0,0,0.65)); }
-  .card-node.selected .card-rect{ stroke:var(--brass); stroke-width:2.5; }
-  .card-title{ font-family:'JetBrains Mono', monospace; font-size:9px; fill:var(--ink); font-weight:700; }
-  .card-sub{ font-family:'Lora', serif; font-size:9.5px; fill:var(--ink-soft); }
+  .card-node:hover .card-rect{ filter:drop-shadow(0 10px 16px rgba(0,0,0,0.28)); }
+  .card-node.selected .card-rect{ stroke:var(--accent-2); stroke-width:2.5; }
+  .card-title{ font-family:'IBM Plex Mono', monospace; font-size:9px; fill:var(--ink); font-weight:600; }
+  .card-sub{ font-family:'Manrope', sans-serif; font-size:9.5px; fill:var(--ink-soft); }
   .pin{ fill:url(#pinGrad); }
-  .string-path{ fill:none; stroke:var(--string); stroke-width:1.6; opacity:0.75; }
+  .string-path{ fill:none; stroke:var(--string); stroke-width:1.6; opacity:0.7; }
 
   .detail-panel{
     margin-top:18px;
-    background:var(--paper);
-    border-radius:2px;
+    background:var(--surface);
+    border:1px solid rgba(215, 209, 197, 0.9);
+    border-radius:22px;
     padding:18px 20px;
     box-shadow:var(--shadow);
   }
-  .detail-panel h3{ font-family:'Special Elite', monospace; margin:0 0 10px; font-size:16px; }
+  .detail-panel h3{ font-family:'Fraunces', serif; margin:0 0 10px; font-size:18px; }
   .detail-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-bottom:14px;}
   .detail-item{ font-size:12.5px; }
-  .detail-item .k{ font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--ink-soft); text-transform:uppercase; display:block; margin-bottom:2px;}
+  .detail-item .k{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--ink-soft); text-transform:uppercase; display:block; margin-bottom:4px;}
   .linked-list{ font-size:13px; line-height:22px; }
 
   /* ---------- SETTINGS ---------- */
   .settings-btn{
     position:fixed; bottom:20px; right:20px;
-    width:42px; height:42px; border-radius:50%;
-    background:var(--felt); color:var(--paper); border:2px solid var(--brass);
+    width:46px; height:46px; border-radius:50%;
+    background:var(--surface); color:var(--accent); border:1px solid var(--line);
     font-size:18px; cursor:pointer; box-shadow:var(--shadow);
   }
   .settings-panel{
     position:fixed; bottom:72px; right:20px; width:290px;
-    background:var(--paper); border-radius:4px; padding:16px;
+    background:var(--surface); border:1px solid rgba(215, 209, 197, 0.9); border-radius:18px; padding:16px;
     box-shadow:var(--shadow); display:none; z-index:10;
   }
   .settings-panel.open{ display:block; }
-  .settings-panel label{ font-family:'JetBrains Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); }
+  .settings-panel label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); }
   .settings-panel input{
     width:100%; margin-top:6px; padding:8px; border:1px solid #c7b98f; border-radius:2px;
-    font-family:'JetBrains Mono', monospace; font-size:12px; background:#fbf6ea;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; background:#fbf6ea;
   }
   .settings-note{ font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:16px; }
   .settings-save{
-    margin-top:10px; width:100%; background:var(--felt); color:var(--paper);
-    border:none; padding:8px; border-radius:2px; font-family:'JetBrains Mono',monospace;
+    margin-top:10px; width:100%; background:var(--accent); color:#fff;
+    border:none; padding:8px; border-radius:2px; font-family:'IBM Plex Mono',monospace;
     font-size:11px; cursor:pointer; text-transform:uppercase; letter-spacing:.06em;
   }
-  .badge-live{ font-size:10px; color:var(--stamp-green); font-family:'JetBrains Mono',monospace; }
-  .badge-offline{ font-size:10px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; }
+  .badge-live{ font-size:10px; color:var(--success); font-family:'IBM Plex Mono',monospace; }
+  .badge-offline{ font-size:10px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="case-number">FILE NO. CFS-2026-<span id="caseSeq">0417</span> · NATIONAL CYBER CRIME REPORTING PORTAL LIAISON</div>
+  <div class="case-number">Case file CFS-2026-<span id="caseSeq">0417</span> · citizen fraud screening</div>
   <h1>Citizen Fraud Shield</h1>
-  <div class="subhead">Paste a suspicious call transcript or message below. The desk will flag digital-arrest and impersonation scam patterns instantly — no wait for a human reviewer.</div>
+  <div class="subhead">Paste a suspicious call transcript or message below. The checker highlights common scam patterns, explains why they matter, and stays usable even when the network is not.</div>
   <nav>
-    <button class="active" data-view="analyze">File a Report</button>
-    <button data-view="board">The Evidence Board</button>
+    <button class="active" data-view="analyze">Check a Message</button>
+    <button data-view="board">Evidence Board</button>
   </nav>
 </header>
 
@@ -340,22 +341,22 @@
   <section class="view active" id="view-analyze">
     <div class="intake-grid">
       <div class="form-card">
-        <span class="field-label">Transcript / Message Under Review</span>
+        <span class="field-label">Transcript / message under review</span>
         <textarea id="inputText" placeholder="e.g. 'This is Officer Sharma from CBI Cyber Cell. Your Aadhaar has been linked to a money laundering case. Do not disconnect this call or you will be arrested...'"></textarea>
         <div class="form-footer">
           <div class="sample-links">
-            <span class="sample-link" data-sample="scam1">Load sample: digital arrest</span>
-            <span class="sample-link" data-sample="scam2">Load sample: courier scam</span>
-            <span class="sample-link" data-sample="safe1">Load sample: legit bank call</span>
+            <span class="sample-link" data-sample="scam1">Digital arrest sample</span>
+            <span class="sample-link" data-sample="scam2">Courier scam sample</span>
+            <span class="sample-link" data-sample="safe1">Legit bank call</span>
           </div>
         </div>
         <div style="margin-top:16px; display:flex; justify-content:flex-end;">
-          <button class="stamp-btn" id="analyzeBtn">Analyze &amp; Stamp Verdict</button>
+          <button class="stamp-btn" id="analyzeBtn">Analyze message</button>
         </div>
       </div>
 
       <div class="result-card" id="resultCard">
-        <div class="result-empty">No case filed yet.<br/>Paste a transcript and press "Analyze &amp; Stamp Verdict."</div>
+        <div class="result-empty">No message checked yet.<br/>Paste a transcript and run the analysis.</div>
       </div>
     </div>
   </section>
@@ -363,7 +364,7 @@
   <!-- BOARD VIEW -->
   <section class="view" id="view-board">
     <div class="board-toolbar">
-      <span>ACTIVE CAMPAIGN CLUSTERS — 11 LINKED REPORTS</span>
+      <span>Static demonstration clusters — 11 linked reports</span>
       <div class="legend">
         <span><i class="dot" style="background:#b23a2e"></i> Digital Arrest Ring</span>
         <span><i class="dot" style="background:#b6852f"></i> Courier / Parcel Scam</span>
@@ -374,18 +375,18 @@
       <svg id="board" viewBox="0 0 1100 520"></svg>
     </div>
     <div class="detail-panel" id="detailPanel">
-      <h3>Select a pinned report to inspect the case</h3>
-      <div class="linked-list" style="color:#8a8065; font-style:italic;">Click any card on the board above.</div>
+      <h3>Select a report to inspect the case</h3>
+      <div class="linked-list" style="color:var(--ink-soft); font-style:italic;">Click any card on the board above.</div>
     </div>
   </section>
 </main>
 
-<button class="settings-btn" id="settingsBtn" title="AI reasoning settings" aria-label="Open settings for AI reasoning mode">⚙</button>
+<button class="settings-btn" id="settingsBtn" title="Settings">⚙</button>
 <div class="settings-panel" id="settingsPanel">
-  <label for="apiKeyInput">Gemini API Key (optional)</label>
-  <input type="password" id="apiKeyInput" placeholder="Paste key to enable AI-written reasoning" aria-label="Enter your Gemini API key" />
-  <div class="settings-note" id="apiStatus"><span class="badge-offline">● Running on offline rule-engine</span><br/>Add a key to layer in richer AI-generated reasoning. The stamp verdict and confidence score work fully without one — this keeps the demo reliable if the venue wifi is bad.</div>
-  <button class="settings-save" id="saveKeyBtn">Save for this session</button>
+  <label>Gemini API Key (optional)</label>
+  <input type="password" id="apiKeyInput" placeholder="Paste key to enable AI-written reasoning" />
+  <div class="settings-note" id="apiStatus"><span class="badge-offline">● Running offline by default</span><br/>Add a key if you want richer explanation text for this session. The verdict and score work without it.</div>
+  <button class="settings-save" id="saveKeyBtn">Save session key</button>
 </div>
 
 <script>
@@ -395,24 +396,6 @@
    2) Optional Gemini call layered on top for richer prose
    3) Static fraud-network "evidence board" demo dataset
    ============================================================ */
-
-// Utility: Escape HTML to prevent XSS
-function escapeHtml(text) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-  return text.replace(/[&<>"']/g, m => map[m]);
-}
-
-// Initialize logging
-const DEBUG = false;
-function log(...args) {
-  if (DEBUG) console.log('[CFS]', ...args);
-}
 
 // ---------- NAV ----------
 document.querySelectorAll('nav button').forEach(btn=>{
@@ -435,7 +418,7 @@ document.getElementById('saveKeyBtn').addEventListener('click', ()=>{
   if(apiKey){
     status.innerHTML = '<span class="badge-live">● AI reasoning enabled for this session</span><br/>Key is kept in memory only — not saved to disk, not sent anywhere except Google\'s API.';
   } else {
-    status.innerHTML = '<span class="badge-offline">● Running on offline rule-engine</span><br/>Add a key to layer in richer AI-generated reasoning.';
+    status.innerHTML = '<span class="badge-offline">● Running offline by default</span><br/>Add a key if you want richer explanation text for this session. The verdict and score work without it.';
   }
   settingsPanel.classList.remove('open');
 });
@@ -500,24 +483,12 @@ async function getAIReasoning(text, hits){
   try{
     const sigList = hits.map(h=>h.label).join(', ');
     const prompt = `You are assisting a citizen fraud-detection tool in India. A message/call transcript was flagged for these signals: ${sigList || 'none strongly'}. Transcript: """${text}"""\n\nIn 2-3 short plain-English sentences, explain in a calm, non-alarming tone why this looks like a scam (or why it looks safe if signals are weak), referencing the "digital arrest" scam pattern used by fraudsters impersonating CBI/police/customs in India if relevant. No jargon.`;
-    
-    const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey), {
+    const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+apiKey, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ contents:[{ parts:[{ text: prompt }] }] })
     });
-    
-    if(!resp.ok) {
-      console.warn('API error:', resp.status, resp.statusText);
-      return null;
-    }
-    
     const data = await resp.json();
-    if(data?.error) {
-      console.warn('API error response:', data.error);
-      return null;
-    }
-    
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
   }catch(e){
     console.warn('AI reasoning unavailable, falling back to rule engine text.', e);
@@ -531,19 +502,9 @@ const analyzeBtn = document.getElementById('analyzeBtn');
 
 analyzeBtn.addEventListener('click', async ()=>{
   const text = document.getElementById('inputText').value.trim();
-  if(!text || text.length === 0){ 
-    alert('Please paste a transcript or message to analyze.');
-    return; 
-  }
-  
-  // Limit input to prevent performance issues
-  if(text.length > 10000) {
-    alert('Input is too long. Please keep it under 10,000 characters.');
-    return;
-  }
-  
+  if(!text){ return; }
   analyzeBtn.disabled = true;
-  analyzeBtn.textContent = 'Filing report...';
+  analyzeBtn.textContent = 'Analyzing...';
 
   const { hits, score, verdict, verdictClass, color } = analyzeText(text);
   const aiText = await getAIReasoning(text, hits);
@@ -552,7 +513,7 @@ analyzeBtn.addEventListener('click', async ()=>{
     <div class="verdict-stamp ${verdictClass}">${verdict}</div>
     <div class="conf-row">
       <div class="conf-label"><span>Risk Score</span><span>${score}/100</span></div>
-      <div class="conf-track"><div class="conf-fill" id="confFill" style="background:${color}; width:0%;"></div></div>
+      <div class="conf-track"><div class="conf-fill" style="background:${color}"></div></div>
     </div>
     <div class="findings">
       <div class="findings-title">Evidence Findings (${hits.length})</div>
@@ -571,14 +532,8 @@ analyzeBtn.addEventListener('click', async ()=>{
     </div>
   `;
 
-  // Trigger confidence bar animation
-  setTimeout(() => {
-    const confFill = document.getElementById('confFill');
-    if (confFill) confFill.style.width = score + '%';
-  }, 50);
-
   analyzeBtn.disabled = false;
-  analyzeBtn.textContent = 'Analyze & Stamp Verdict';
+  analyzeBtn.textContent = 'Analyze message';
 });
 
 // ============================================================
@@ -622,84 +577,67 @@ function makeDefs(){
 }
 
 function drawBoard(){
-  try {
-    svg.innerHTML = '';
-    makeDefs();
+  svg.innerHTML = '';
+  makeDefs();
 
-    // strings first (so cards sit on top)
-    links.forEach(([a,b])=>{
-      const ra = reports.find(r=>r.id===a);
-      const rb = reports.find(r=>r.id===b);
-      if(!ra || !rb) return; // Skip if report not found
-      
-      const midX = (ra.x+rb.x)/2 + (Math.random()*20-10);
-      const midY = (ra.y+rb.y)/2 - 20;
-      const path = document.createElementNS(svgNS,'path');
-      path.setAttribute('d', `M ${ra.x} ${ra.y} Q ${midX} ${midY} ${rb.x} ${rb.y}`);
-      path.setAttribute('class','string-path');
-      path.setAttribute('stroke', clusterColors[ra.cluster]);
-      path.setAttribute('aria-hidden', 'true');
-      svg.appendChild(path);
-    });
+  // strings first (so cards sit on top)
+  links.forEach(([a,b])=>{
+    const ra = reports.find(r=>r.id===a);
+    const rb = reports.find(r=>r.id===b);
+    const midX = (ra.x+rb.x)/2 + (Math.random()*20-10);
+    const midY = (ra.y+rb.y)/2 - 20;
+    const path = document.createElementNS(svgNS,'path');
+    path.setAttribute('d', `M ${ra.x} ${ra.y} Q ${midX} ${midY} ${rb.x} ${rb.y}`);
+    path.setAttribute('class','string-path');
+    path.setAttribute('stroke', clusterColors[ra.cluster]);
+    svg.appendChild(path);
+  });
 
-    reports.forEach(r=>{
-      const g = document.createElementNS(svgNS,'g');
-      g.setAttribute('class','card-node');
-      g.setAttribute('role', 'button');
-      g.setAttribute('tabindex', '0');
-      g.setAttribute('transform', `translate(${r.x-55}, ${r.y-32})`);
-      g.setAttribute('aria-label', `Report ${r.id}: ${r.title}, ${r.sub}`);
-      g.dataset.id = r.id;
+  reports.forEach(r=>{
+    const g = document.createElementNS(svgNS,'g');
+    g.setAttribute('class','card-node');
+    g.setAttribute('transform', `translate(${r.x-55}, ${r.y-32})`);
+    g.dataset.id = r.id;
 
-      const rect = document.createElementNS(svgNS,'rect');
-      rect.setAttribute('width','110'); rect.setAttribute('height','64');
-      rect.setAttribute('rx','2'); rect.setAttribute('class','card-rect');
-      rect.setAttribute('transform', `rotate(${(Math.random()*6-3).toFixed(1)} 55 32)`);
-      g.appendChild(rect);
+    const rect = document.createElementNS(svgNS,'rect');
+    rect.setAttribute('width','110'); rect.setAttribute('height','64');
+    rect.setAttribute('rx','2'); rect.setAttribute('class','card-rect');
+    rect.setAttribute('transform', `rotate(${(Math.random()*6-3).toFixed(1)} 55 32)`);
+    g.appendChild(rect);
 
-      const stripe = document.createElementNS(svgNS,'rect');
-      stripe.setAttribute('x','0'); stripe.setAttribute('y','0');
-      stripe.setAttribute('width','6'); stripe.setAttribute('height','64');
-      stripe.setAttribute('fill', clusterColors[r.cluster]);
-      g.appendChild(stripe);
+    const stripe = document.createElementNS(svgNS,'rect');
+    stripe.setAttribute('x','0'); stripe.setAttribute('y','0');
+    stripe.setAttribute('width','6'); stripe.setAttribute('height','64');
+    stripe.setAttribute('fill', clusterColors[r.cluster]);
+    g.appendChild(stripe);
 
-      const title = document.createElementNS(svgNS,'text');
-      title.setAttribute('x','12'); title.setAttribute('y','24');
-      title.setAttribute('class','card-title');
-      title.textContent = r.id;
-      g.appendChild(title);
+    const title = document.createElementNS(svgNS,'text');
+    title.setAttribute('x','12'); title.setAttribute('y','24');
+    title.setAttribute('class','card-title');
+    title.textContent = r.id;
+    g.appendChild(title);
 
-      const sub1 = document.createElementNS(svgNS,'text');
-      sub1.setAttribute('x','12'); sub1.setAttribute('y','40');
-      sub1.setAttribute('class','card-sub');
-      sub1.textContent = r.title.length>18 ? r.title.slice(0,18)+'…' : r.title;
-      g.appendChild(sub1);
+    const sub1 = document.createElementNS(svgNS,'text');
+    sub1.setAttribute('x','12'); sub1.setAttribute('y','40');
+    sub1.setAttribute('class','card-sub');
+    sub1.textContent = r.title.length>18 ? r.title.slice(0,18)+'…' : r.title;
+    g.appendChild(sub1);
 
-      const sub2 = document.createElementNS(svgNS,'text');
-      sub2.setAttribute('x','12'); sub2.setAttribute('y','54');
-      sub2.setAttribute('class','card-sub');
-      sub2.setAttribute('style','font-size:8px; opacity:0.75;');
-      sub2.textContent = r.sub;
-      g.appendChild(sub2);
+    const sub2 = document.createElementNS(svgNS,'text');
+    sub2.setAttribute('x','12'); sub2.setAttribute('y','54');
+    sub2.setAttribute('class','card-sub');
+    sub2.setAttribute('style','font-size:8px; opacity:0.75;');
+    sub2.textContent = r.sub;
+    g.appendChild(sub2);
 
-      const pin = document.createElementNS(svgNS,'circle');
-      pin.setAttribute('cx','55'); pin.setAttribute('cy','2'); pin.setAttribute('r','5');
-      pin.setAttribute('class','pin');
-      g.appendChild(pin);
+    const pin = document.createElementNS(svgNS,'circle');
+    pin.setAttribute('cx','55'); pin.setAttribute('cy','2'); pin.setAttribute('r','5');
+    pin.setAttribute('class','pin');
+    g.appendChild(pin);
 
-      const clickHandler = () => selectReport(r);
-      g.addEventListener('click', clickHandler);
-      g.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          clickHandler();
-        }
-      });
-      svg.appendChild(g);
-    });
-  } catch(e) {
-    console.error('Error drawing board:', e);
-  }
+    g.addEventListener('click', ()=> selectReport(r));
+    svg.appendChild(g);
+  });
 }
 
 function selectReport(r){
@@ -710,17 +648,16 @@ function selectReport(r){
   const linked = links.filter(l=>l.includes(r.id)).map(l=> l[0]===r.id ? l[1] : l[0]);
   const clusterName = ['Digital Arrest Ring','Courier / Parcel Scam','KYC / Bank Impersonation'][r.cluster];
 
-  const detailPanel = document.getElementById('detailPanel');
-  detailPanel.innerHTML = `
-    <h3>${escapeHtml(r.id)} — ${escapeHtml(r.title)}</h3>
+  document.getElementById('detailPanel').innerHTML = `
+    <h3>${r.id} — ${r.title}</h3>
     <div class="detail-grid">
-      <div class="detail-item"><span class="k">Cluster</span>${escapeHtml(clusterName)}</div>
-      <div class="detail-item"><span class="k">Location / Date</span>${escapeHtml(r.sub.replace('Reported: ', ''))}</div>
+      <div class="detail-item"><span class="k">Cluster</span>${clusterName}</div>
+      <div class="detail-item"><span class="k">Location / Date</span>${r.sub.replace('Reported: ','')}</div>
       <div class="detail-item"><span class="k">Linked Reports</span>${linked.length}</div>
       <div class="detail-item"><span class="k">Status</span>Under regional review</div>
     </div>
     <div class="linked-list">
-      <b>Connected to:</b> ${linked.length ? escapeHtml(linked.join(', ')) : 'No linked reports yet'} —
+      <b>Connected to:</b> ${linked.length ? linked.join(', ') : 'No linked reports yet'} —
       linked because these reports share overlapping call-script phrasing, timing window, or spoofed-number formatting patterns.
     </div>
   `;
