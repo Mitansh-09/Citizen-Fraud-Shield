@@ -82,6 +82,10 @@
     border-bottom:3px solid transparent;
     transition:color .2s, border-color .2s;
   }
+  nav button:focus {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
   nav button.active{
     color:var(--paper);
     border-bottom-color:var(--brass);
@@ -139,6 +143,10 @@
     font-size:15px;
     line-height:28px;
     color:var(--ink);
+  }
+  textarea:focus {
+    outline: 2px solid var(--brass);
+    outline-offset: -2px;
   }
   textarea::placeholder{ color:#8a8065; font-style:italic; }
 
@@ -216,7 +224,7 @@
   .conf-row{ margin-top:18px; }
   .conf-label{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; display:flex; justify-content:space-between; }
   .conf-track{ height:8px; background:#d8caa4; border-radius:4px; margin-top:6px; overflow:hidden; }
-  .conf-fill{ height:100%; width:0%; transition:width .6s ease; border-radius:4px; }
+  .conf-fill{ height:100%; width:0%; transition:width .6s cubic-bezier(0.23, 1, 0.320, 1); border-radius:4px; }
 
   .findings{ margin-top:20px; }
   .findings-title{ font-family:'JetBrains Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); border-bottom:1px solid #c7b98f; padding-bottom:6px; margin-bottom:10px;}
@@ -258,6 +266,7 @@
   svg#board{ width:100%; height:520px; display:block; }
 
   .card-node{ cursor:pointer; }
+  .card-node:focus { outline: 2px solid var(--brass); outline-offset: 2px; }
   .card-rect{
     fill:var(--paper);
     stroke:rgba(0,0,0,0.25);
@@ -266,6 +275,7 @@
     transition:filter .15s;
   }
   .card-node:hover .card-rect{ filter:drop-shadow(2px 6px 6px rgba(0,0,0,0.65)); }
+  .card-node:focus .card-rect{ filter:drop-shadow(2px 6px 6px rgba(0,0,0,0.65)); }
   .card-node.selected .card-rect{ stroke:var(--brass); stroke-width:2.5; }
   .card-title{ font-family:'JetBrains Mono', monospace; font-size:9px; fill:var(--ink); font-weight:700; }
   .card-sub{ font-family:'Lora', serif; font-size:9.5px; fill:var(--ink-soft); }
@@ -370,10 +380,10 @@
   </section>
 </main>
 
-<button class="settings-btn" id="settingsBtn" title="AI reasoning settings">⚙</button>
+<button class="settings-btn" id="settingsBtn" title="AI reasoning settings" aria-label="Open settings for AI reasoning mode">⚙</button>
 <div class="settings-panel" id="settingsPanel">
-  <label>Gemini API Key (optional)</label>
-  <input type="password" id="apiKeyInput" placeholder="Paste key to enable AI-written reasoning" />
+  <label for="apiKeyInput">Gemini API Key (optional)</label>
+  <input type="password" id="apiKeyInput" placeholder="Paste key to enable AI-written reasoning" aria-label="Enter your Gemini API key" />
   <div class="settings-note" id="apiStatus"><span class="badge-offline">● Running on offline rule-engine</span><br/>Add a key to layer in richer AI-generated reasoning. The stamp verdict and confidence score work fully without one — this keeps the demo reliable if the venue wifi is bad.</div>
   <button class="settings-save" id="saveKeyBtn">Save for this session</button>
 </div>
@@ -385,6 +395,24 @@
    2) Optional Gemini call layered on top for richer prose
    3) Static fraud-network "evidence board" demo dataset
    ============================================================ */
+
+// Utility: Escape HTML to prevent XSS
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Initialize logging
+const DEBUG = false;
+function log(...args) {
+  if (DEBUG) console.log('[CFS]', ...args);
+}
 
 // ---------- NAV ----------
 document.querySelectorAll('nav button').forEach(btn=>{
@@ -472,12 +500,24 @@ async function getAIReasoning(text, hits){
   try{
     const sigList = hits.map(h=>h.label).join(', ');
     const prompt = `You are assisting a citizen fraud-detection tool in India. A message/call transcript was flagged for these signals: ${sigList || 'none strongly'}. Transcript: """${text}"""\n\nIn 2-3 short plain-English sentences, explain in a calm, non-alarming tone why this looks like a scam (or why it looks safe if signals are weak), referencing the "digital arrest" scam pattern used by fraudsters impersonating CBI/police/customs in India if relevant. No jargon.`;
-    const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+apiKey, {
+    
+    const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey), {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ contents:[{ parts:[{ text: prompt }] }] })
     });
+    
+    if(!resp.ok) {
+      console.warn('API error:', resp.status, resp.statusText);
+      return null;
+    }
+    
     const data = await resp.json();
+    if(data?.error) {
+      console.warn('API error response:', data.error);
+      return null;
+    }
+    
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
   }catch(e){
     console.warn('AI reasoning unavailable, falling back to rule engine text.', e);
@@ -491,7 +531,17 @@ const analyzeBtn = document.getElementById('analyzeBtn');
 
 analyzeBtn.addEventListener('click', async ()=>{
   const text = document.getElementById('inputText').value.trim();
-  if(!text){ return; }
+  if(!text || text.length === 0){ 
+    alert('Please paste a transcript or message to analyze.');
+    return; 
+  }
+  
+  // Limit input to prevent performance issues
+  if(text.length > 10000) {
+    alert('Input is too long. Please keep it under 10,000 characters.');
+    return;
+  }
+  
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = 'Filing report...';
 
@@ -502,7 +552,7 @@ analyzeBtn.addEventListener('click', async ()=>{
     <div class="verdict-stamp ${verdictClass}">${verdict}</div>
     <div class="conf-row">
       <div class="conf-label"><span>Risk Score</span><span>${score}/100</span></div>
-      <div class="conf-track"><div class="conf-fill" style="background:${color}"></div></div>
+      <div class="conf-track"><div class="conf-fill" id="confFill" style="background:${color}; width:0%;"></div></div>
     </div>
     <div class="findings">
       <div class="findings-title">Evidence Findings (${hits.length})</div>
@@ -520,6 +570,12 @@ analyzeBtn.addEventListener('click', async ()=>{
       }`}
     </div>
   `;
+
+  // Trigger confidence bar animation
+  setTimeout(() => {
+    const confFill = document.getElementById('confFill');
+    if (confFill) confFill.style.width = score + '%';
+  }, 50);
 
   analyzeBtn.disabled = false;
   analyzeBtn.textContent = 'Analyze & Stamp Verdict';
@@ -566,67 +622,84 @@ function makeDefs(){
 }
 
 function drawBoard(){
-  svg.innerHTML = '';
-  makeDefs();
+  try {
+    svg.innerHTML = '';
+    makeDefs();
 
-  // strings first (so cards sit on top)
-  links.forEach(([a,b])=>{
-    const ra = reports.find(r=>r.id===a);
-    const rb = reports.find(r=>r.id===b);
-    const midX = (ra.x+rb.x)/2 + (Math.random()*20-10);
-    const midY = (ra.y+rb.y)/2 - 20;
-    const path = document.createElementNS(svgNS,'path');
-    path.setAttribute('d', `M ${ra.x} ${ra.y} Q ${midX} ${midY} ${rb.x} ${rb.y}`);
-    path.setAttribute('class','string-path');
-    path.setAttribute('stroke', clusterColors[ra.cluster]);
-    svg.appendChild(path);
-  });
+    // strings first (so cards sit on top)
+    links.forEach(([a,b])=>{
+      const ra = reports.find(r=>r.id===a);
+      const rb = reports.find(r=>r.id===b);
+      if(!ra || !rb) return; // Skip if report not found
+      
+      const midX = (ra.x+rb.x)/2 + (Math.random()*20-10);
+      const midY = (ra.y+rb.y)/2 - 20;
+      const path = document.createElementNS(svgNS,'path');
+      path.setAttribute('d', `M ${ra.x} ${ra.y} Q ${midX} ${midY} ${rb.x} ${rb.y}`);
+      path.setAttribute('class','string-path');
+      path.setAttribute('stroke', clusterColors[ra.cluster]);
+      path.setAttribute('aria-hidden', 'true');
+      svg.appendChild(path);
+    });
 
-  reports.forEach(r=>{
-    const g = document.createElementNS(svgNS,'g');
-    g.setAttribute('class','card-node');
-    g.setAttribute('transform', `translate(${r.x-55}, ${r.y-32})`);
-    g.dataset.id = r.id;
+    reports.forEach(r=>{
+      const g = document.createElementNS(svgNS,'g');
+      g.setAttribute('class','card-node');
+      g.setAttribute('role', 'button');
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('transform', `translate(${r.x-55}, ${r.y-32})`);
+      g.setAttribute('aria-label', `Report ${r.id}: ${r.title}, ${r.sub}`);
+      g.dataset.id = r.id;
 
-    const rect = document.createElementNS(svgNS,'rect');
-    rect.setAttribute('width','110'); rect.setAttribute('height','64');
-    rect.setAttribute('rx','2'); rect.setAttribute('class','card-rect');
-    rect.setAttribute('transform', `rotate(${(Math.random()*6-3).toFixed(1)} 55 32)`);
-    g.appendChild(rect);
+      const rect = document.createElementNS(svgNS,'rect');
+      rect.setAttribute('width','110'); rect.setAttribute('height','64');
+      rect.setAttribute('rx','2'); rect.setAttribute('class','card-rect');
+      rect.setAttribute('transform', `rotate(${(Math.random()*6-3).toFixed(1)} 55 32)`);
+      g.appendChild(rect);
 
-    const stripe = document.createElementNS(svgNS,'rect');
-    stripe.setAttribute('x','0'); stripe.setAttribute('y','0');
-    stripe.setAttribute('width','6'); stripe.setAttribute('height','64');
-    stripe.setAttribute('fill', clusterColors[r.cluster]);
-    g.appendChild(stripe);
+      const stripe = document.createElementNS(svgNS,'rect');
+      stripe.setAttribute('x','0'); stripe.setAttribute('y','0');
+      stripe.setAttribute('width','6'); stripe.setAttribute('height','64');
+      stripe.setAttribute('fill', clusterColors[r.cluster]);
+      g.appendChild(stripe);
 
-    const title = document.createElementNS(svgNS,'text');
-    title.setAttribute('x','12'); title.setAttribute('y','24');
-    title.setAttribute('class','card-title');
-    title.textContent = r.id;
-    g.appendChild(title);
+      const title = document.createElementNS(svgNS,'text');
+      title.setAttribute('x','12'); title.setAttribute('y','24');
+      title.setAttribute('class','card-title');
+      title.textContent = r.id;
+      g.appendChild(title);
 
-    const sub1 = document.createElementNS(svgNS,'text');
-    sub1.setAttribute('x','12'); sub1.setAttribute('y','40');
-    sub1.setAttribute('class','card-sub');
-    sub1.textContent = r.title.length>18 ? r.title.slice(0,18)+'…' : r.title;
-    g.appendChild(sub1);
+      const sub1 = document.createElementNS(svgNS,'text');
+      sub1.setAttribute('x','12'); sub1.setAttribute('y','40');
+      sub1.setAttribute('class','card-sub');
+      sub1.textContent = r.title.length>18 ? r.title.slice(0,18)+'…' : r.title;
+      g.appendChild(sub1);
 
-    const sub2 = document.createElementNS(svgNS,'text');
-    sub2.setAttribute('x','12'); sub2.setAttribute('y','54');
-    sub2.setAttribute('class','card-sub');
-    sub2.setAttribute('style','font-size:8px; opacity:0.75;');
-    sub2.textContent = r.sub;
-    g.appendChild(sub2);
+      const sub2 = document.createElementNS(svgNS,'text');
+      sub2.setAttribute('x','12'); sub2.setAttribute('y','54');
+      sub2.setAttribute('class','card-sub');
+      sub2.setAttribute('style','font-size:8px; opacity:0.75;');
+      sub2.textContent = r.sub;
+      g.appendChild(sub2);
 
-    const pin = document.createElementNS(svgNS,'circle');
-    pin.setAttribute('cx','55'); pin.setAttribute('cy','2'); pin.setAttribute('r','5');
-    pin.setAttribute('class','pin');
-    g.appendChild(pin);
+      const pin = document.createElementNS(svgNS,'circle');
+      pin.setAttribute('cx','55'); pin.setAttribute('cy','2'); pin.setAttribute('r','5');
+      pin.setAttribute('class','pin');
+      g.appendChild(pin);
 
-    g.addEventListener('click', ()=> selectReport(r));
-    svg.appendChild(g);
-  });
+      const clickHandler = () => selectReport(r);
+      g.addEventListener('click', clickHandler);
+      g.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          clickHandler();
+        }
+      });
+      svg.appendChild(g);
+    });
+  } catch(e) {
+    console.error('Error drawing board:', e);
+  }
 }
 
 function selectReport(r){
@@ -637,16 +710,17 @@ function selectReport(r){
   const linked = links.filter(l=>l.includes(r.id)).map(l=> l[0]===r.id ? l[1] : l[0]);
   const clusterName = ['Digital Arrest Ring','Courier / Parcel Scam','KYC / Bank Impersonation'][r.cluster];
 
-  document.getElementById('detailPanel').innerHTML = `
-    <h3>${r.id} — ${r.title}</h3>
+  const detailPanel = document.getElementById('detailPanel');
+  detailPanel.innerHTML = `
+    <h3>${escapeHtml(r.id)} — ${escapeHtml(r.title)}</h3>
     <div class="detail-grid">
-      <div class="detail-item"><span class="k">Cluster</span>${clusterName}</div>
-      <div class="detail-item"><span class="k">Location / Date</span>${r.sub.replace('Reported: ','')}</div>
+      <div class="detail-item"><span class="k">Cluster</span>${escapeHtml(clusterName)}</div>
+      <div class="detail-item"><span class="k">Location / Date</span>${escapeHtml(r.sub.replace('Reported: ', ''))}</div>
       <div class="detail-item"><span class="k">Linked Reports</span>${linked.length}</div>
       <div class="detail-item"><span class="k">Status</span>Under regional review</div>
     </div>
     <div class="linked-list">
-      <b>Connected to:</b> ${linked.length ? linked.join(', ') : 'No linked reports yet'} —
+      <b>Connected to:</b> ${linked.length ? escapeHtml(linked.join(', ')) : 'No linked reports yet'} —
       linked because these reports share overlapping call-script phrasing, timing window, or spoofed-number formatting patterns.
     </div>
   `;
